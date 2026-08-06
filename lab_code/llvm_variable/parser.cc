@@ -62,9 +62,7 @@ std::vector<std::shared_ptr<ASTNode>> Parser::ParseDecl()
         }
         //int a=3; -> int a; a=3;
         //variable declaration
-        auto variableDecl = std::make_shared<VariableDecl>();
-        variableDecl->name = tok.content;
-        variableDecl->ty = CType::GetIntType();
+        auto variableDecl = sema.SemaVariableDecl(tok.content, baseTy);
         astArr.push_back(variableDecl);
         Consume(TokenType::identifier);
 

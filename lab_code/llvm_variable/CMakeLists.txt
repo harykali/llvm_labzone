@@ -25,4 +25,4 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
 
 set(LLVM_LINK_COMPONENTS Support Core)
 
-add_llvm_executable(${PROJECT_NAME} main.cc lexer.cc parser.cc printVisitor.cc codegen.cc type.cc scope.cc )
+add_llvm_executable(${PROJECT_NAME} main.cc lexer.cc parser.cc printVisitor.cc codegen.cc type.cc scope.cc sema.cc)

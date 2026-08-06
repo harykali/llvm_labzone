@@ -1,9 +1,11 @@
 #pragma once
 #include "lexer.h"
 #include "ast.h"
+#include "sema.h"
 class Parser {
     private:
-        Lexer lexer;
+        Lexer &lexer;
+        Sema &sema;
             //Check if the next token is of the expected type.
         bool Expect(TokenType tokenType);
         
@@ -21,7 +23,7 @@ class Parser {
         
         Token tok;
     public:
-        Parser(Lexer &lexer) : lexer(lexer) {};
+        Parser(Lexer &lexer, Sema &sema) : lexer(lexer), sema(sema) {};
         std::shared_ptr<Program> ParseProgram();
 
 
