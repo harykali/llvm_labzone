@@ -6,12 +6,13 @@ factor : number | "(" expr ")" ;
 number: ([0-9])+ ;
  */
 
- /*
- 
- 
- */
+/*
+
+
+*/
 #include "parser.h"
 #include "ast.h"
+#include "sema.h"
 std::shared_ptr<Program> Parser::ParseProgram()
 {
     // while Ture .....EXIT
@@ -51,36 +52,43 @@ std::vector<std::shared_ptr<ASTNode>> Parser::ParseDecl()
     Consume(TokenType::kw_int);
     CType *baseTy = CType::GetIntType();
     std::vector<std::shared_ptr<ASTNode>> astArr;
-    ///int a,b=3;
-    ///a,b=3;
-    int i=0;
-    while(tok.tokenType!=TokenType::semi){
-        //count ","
-        if(i++>0)
+    /// int a,b=3;
+    /// a,b=3;
+
+    auto varibale_name = tok.content;
+
+    int i = 0;
+    while (tok.tokenType != TokenType::semi)
+    {
+        // count ","
+        if (i++ > 0)
         {
             assert(Consume(TokenType::comma));
         }
-        //int a=3; -> int a; a=3;
-        //variable declaration
-        auto variableDecl = sema.SemaVariableDecl(tok.content, baseTy);
+        // int a=3; -> int a; a=3;
+        // variable declaration
+        auto variableDecl = sema.SemaVariableDecl(varibale_name, baseTy);
         astArr.push_back(variableDecl);
         Consume(TokenType::identifier);
 
-        if(tok.tokenType == TokenType::equal){
+        if (tok.tokenType == TokenType::equal)
+        {   
+            auto left = sema.SemaVariableAccess(varibale_name, baseTy);
             Advance();
-            auto right=ParseExpr();
-            auto assignExpr = std::make_shared<AssignExpr>();
-            assignExpr->left = variableDecl;
-            assignExpr->right = right;
+            auto right = ParseExpr();
+
+            // process assignment expression with semantic analysis
+            auto assignExpr = sema.SemaAssignExpr(left, right);
+
+            // assignExpr->left = variableDecl;
+
+            // assignExpr->right = right;
 
             astArr.push_back(assignExpr);
-
         }
-
     }
     Consume(TokenType::semi);
     return astArr;
-
 };
 
 // left combining
@@ -151,8 +159,9 @@ std::shared_ptr<ASTNode> Parser::ParseFactor()
         Advance();
         return expr;
     }
-    else if (tok.tokenType==TokenType::identifier){
-        ///semc
+    else if (tok.tokenType == TokenType::identifier)
+    {
+        /// semc
         auto expr = std::make_shared<VariableAccessExpr>();
         expr->name = tok.content;
         expr->ty = tok.type;

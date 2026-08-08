@@ -42,10 +42,10 @@ int main(int argc, char **argv)
     //     if (tok.tokenType != TokenType::eof)
     //         tok.Dump();
     //     }
-    Parser parser(lex);
-    auto program = parser.ParseProgram();
-    std::cout << "Parsing completed.\n";
-    PrintVisitor printVisitor(program);
+    // Parser parser(lex);
+    // auto program = parser.ParseProgram();
+    // std::cout << "Parsing completed.\n";
+    // PrintVisitor printVisitor(program);
     // CodeGen codeGen(program);
     // std::cout << "Codegen completed.\n";
     return 1;
