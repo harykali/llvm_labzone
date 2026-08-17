@@ -139,11 +139,9 @@ std::shared_ptr<ASTNode> Parser::ParseTerm()
             op = OPCode::DIV;
         }
         Advance();
-        auto binaryExpr = std::make_shared<BinaryExpr>();
-        binaryExpr->op = op;
-        binaryExpr->left = left;
-        binaryExpr->right = ParseFactor();
-
+        
+        auto right = ParseTerm();
+        auto binaryExpr = sema.SemaBinaryExpr(left, right, op);
         left = binaryExpr;
     }
     return left;

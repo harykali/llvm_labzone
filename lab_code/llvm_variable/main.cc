@@ -9,6 +9,8 @@
 #include "printVisitor.h"
 #include "codegen.h"
 #include "llvm/Support/TargetSelect.h"
+#include "sema.h"
+
 int main(int argc, char **argv)
 {
     llvm::InitializeNativeTarget();
@@ -35,17 +37,18 @@ int main(int argc, char **argv)
     std::unique_ptr<llvm::MemoryBuffer> fileBuffer = std::move(*file);
     Lexer lex(fileBuffer->getBuffer());
 
-    // Token tok;
-    // while (tok.tokenType != TokenType::eof)
-    // {
-    //     lex.NextToken(tok);
-    //     if (tok.tokenType != TokenType::eof)
-    //         tok.Dump();
-    //     }
-    // Parser parser(lex);
-    // auto program = parser.ParseProgram();
-    // std::cout << "Parsing completed.\n";
-    // PrintVisitor printVisitor(program);
+    Token tok;
+    while (tok.tokenType != TokenType::eof)
+    {
+        lex.NextToken(tok);
+        if (tok.tokenType != TokenType::eof)
+            tok.Dump();
+        }
+    Sema sema;
+    Parser parser(lex,sema);
+    auto program = parser.ParseProgram();
+    std::cout << "Parsing completed.\n";
+    PrintVisitor printVisitor(program);
     // CodeGen codeGen(program);
     // std::cout << "Codegen completed.\n";
     return 1;

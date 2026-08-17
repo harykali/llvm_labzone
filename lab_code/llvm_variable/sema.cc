@@ -61,3 +61,19 @@ std::shared_ptr<ASTNode> Sema::SemaAssignExpr(std::shared_ptr<ASTNode> left, std
     assignExpr->right = right;
     return assignExpr;
 }
+
+std::shared_ptr<ASTNode> Sema::SemaBinaryExpr(std::shared_ptr<ASTNode> left, std::shared_ptr<ASTNode> right, OPCode op)
+{
+    if (left == nullptr || right == nullptr)
+    {
+        llvm::errs() << "Error: Left or right expression is null in binary expression.\n";
+        exit(1);
+        return nullptr;
+    }
+
+    auto binaryExpr = std::make_shared<BinaryExpr>();
+    binaryExpr->left = left;
+    binaryExpr->right = right;
+    binaryExpr->op = op;
+    return binaryExpr;
+}
