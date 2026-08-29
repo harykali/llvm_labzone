@@ -10,7 +10,7 @@
 #include "codegen.h"
 #include "llvm/Support/TargetSelect.h"
 #include "sema.h"
-
+//main
 int main(int argc, char **argv)
 {
     llvm::InitializeNativeTarget();
