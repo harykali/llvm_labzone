@@ -71,7 +71,7 @@ llvm::Value *CodeGen::VisitorProgram(Program *program)
             p = IRbuilder.CreateIntCast(p, IRbuilder.getInt32Ty(), true, "tmp_cast");
         }
 
-        IRbuilder.CreateCall(printfFunc, {IRbuilder.CreateGlobalStringPtr("expr val: %d\n"), p});
+        IRbuilder.CreateCall(printfFunc, {IRbuilder.CreateGlobalString("expr val: %d\n"), p});
     }
 
     IRbuilder.CreateRet(IRbuilder.getInt32(0));

@@ -1,27 +1,24 @@
 {
-  "configurations": [
-    {
-      "name": "Linux",
-      "includePath": [
-        "${workspaceFolder}/../../llvm_project_1706/llvm_install_dir/include/**",
-        "${workspaceFolder}/../../llvm_project_1706/build/include/**",
-        "${workspaceFolder}/**"
-      ],
-      "defines": [],
-      "compilerPath": "/usr/bin/g++",
-      "cStandard": "c17",
-      "cppStandard": "c++20",
-      "intelliSenseMode": "linux-gcc-x64",
-      "mergeConfigurations": false,
-      "browse": {
-        "path": [
-          "${workspaceFolder}/**",
-          "${workspaceFolder}/../../llvm_project_1706/build/include"
-        ],
-        "limitSymbolsToIncludedHeaders": true,
-        "databaseFilename": "${workspaceFolder}/.vscode/browse.vc.db"
-      }
-    }
-  ],
-  "version": 4
+    "configurations": [
+        {
+            "name": "macOS",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/opt/homebrew/opt/llvm/include"
+            ],
+            "defines": [
+                "__STDC_CONSTANT_MACROS",
+                "__STDC_FORMAT_MACROS",
+                "__STDC_LIMIT_MACROS"
+            ],
+            "compilerPath": "/usr/bin/clang++",
+            "cStandard": "c17",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "macos-clang-arm64",
+            "configurationProvider": "ms-vscode.cmake-tools",
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+            "mergeConfigurations": true
+        }
+    ],
+    "version": 4
 }
