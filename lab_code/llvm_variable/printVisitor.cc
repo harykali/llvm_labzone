@@ -10,7 +10,6 @@ PrintVisitor::PrintVisitor(std::shared_ptr<Program> program) {
 
 llvm::Value* PrintVisitor::VisitorProgram(Program *program) {
     for (auto& expr : program->exprVec) {
-        //这里注意类型分发
         expr->Accept(this);
         llvm::outs() << ";\n";
     }

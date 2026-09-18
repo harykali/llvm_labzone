@@ -37,6 +37,7 @@ std::shared_ptr<Symbol> Scope::FindSymbolInCurrentScope(llvm::StringRef name)
 }
 void Scope::AddSymbol(SymbolKind kind, CType *ty, llvm::StringRef name)
 {
+    //symbol already exists in current scope
     auto symbol = std::make_shared<Symbol>(kind, ty, name);
     envs.back()->VariableSymbolTable.insert({name, symbol});
 }
