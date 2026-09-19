@@ -26,10 +26,11 @@ Lexer::Lexer(llvm::StringRef sourceCode)
 
 void Lexer::NextToken(Token &tok)
 {
+    tok.type = nullptr;
     tok.row = row;
 
     /// 1. Skip white space
-    while (IsWhiteSpace(*BufPtr))
+    while (BufPtr < BufEnd && IsWhiteSpace(*BufPtr))
     {
         if (*BufPtr == '\n')
         {

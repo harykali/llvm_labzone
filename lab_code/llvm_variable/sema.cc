@@ -22,7 +22,7 @@ std::shared_ptr<ASTNode> Sema::SemaVariableDecl(llvm::StringRef name, CType *ty)
     return variableDecl;
 }
 
-std::shared_ptr<ASTNode> Sema::SemaVariableAccess(llvm::StringRef name, CType *ty)
+std::shared_ptr<ASTNode> Sema::SemaVariableAccess(llvm::StringRef name)
 {
     // Implementation for variable access semantic analysis
     std::shared_ptr<Symbol> symbol = scope.FindSymbol(name);
@@ -35,6 +35,8 @@ std::shared_ptr<ASTNode> Sema::SemaVariableAccess(llvm::StringRef name, CType *t
     }
 
     auto expr = std::make_shared<VariableAccessExpr>();
+    expr->name = name;
+    expr->ty = symbol->GetType();
 
     return expr;
 }
@@ -56,9 +58,17 @@ std::shared_ptr<ASTNode> Sema::SemaAssignExpr(std::shared_ptr<ASTNode> left, std
         return nullptr;
     }
 
+    if (left->ty != right->ty)
+    {
+        llvm::errs() << "Error: Assignment operands have incompatible types.\n";
+        exit(1);
+        return nullptr;
+    }
+
     auto assignExpr = std::make_shared<AssignExpr>();
     assignExpr->left = left;
     assignExpr->right = right;
+    assignExpr->ty = left->ty;
     return assignExpr;
 }
 
@@ -71,9 +81,17 @@ std::shared_ptr<ASTNode> Sema::SemaBinaryExpr(std::shared_ptr<ASTNode> left, std
         return nullptr;
     }
 
+    if (left->ty != right->ty)
+    {
+        llvm::errs() << "Error: Binary operands have incompatible types.\n";
+        exit(1);
+        return nullptr;
+    }
+
     auto binaryExpr = std::make_shared<BinaryExpr>();
     binaryExpr->left = left;
     binaryExpr->right = right;
     binaryExpr->op = op;
+    binaryExpr->ty = left->ty;
     return binaryExpr;
 }

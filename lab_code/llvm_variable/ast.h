@@ -44,7 +44,7 @@ private:
 public:
     virtual ~ASTNode() {};
     CType *ty;
-    ASTNode(Kind kind) : kind(kind) {};
+    ASTNode(Kind kind) : kind(kind), ty(nullptr) {};
     const Kind getKind() const { return kind; }
     virtual llvm::Value *Accept(Visitor *v) { return nullptr; };
 };

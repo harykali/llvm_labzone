@@ -9,7 +9,30 @@ PrintVisitor::PrintVisitor(std::shared_ptr<Program> program) {
 // }
 
 llvm::Value* PrintVisitor::VisitorProgram(Program *program) {
-    for (auto& expr : program->exprVec) {
+    for (size_t i = 0; i < program->exprVec.size(); ++i) {
+        auto& expr = program->exprVec[i];
+
+        // `int a = 3` is stored as a declaration followed by an assignment.
+        // Join those two AST nodes when printing the source program.
+        if (i + 1 < program->exprVec.size() &&
+            VariableDecl::classof(expr.get()) &&
+            AssignExpr::classof(program->exprVec[i + 1].get())) {
+            auto *decl = static_cast<VariableDecl *>(expr.get());
+            auto *assign = static_cast<AssignExpr *>(program->exprVec[i + 1].get());
+
+            if (VariableAccessExpr::classof(assign->left.get())) {
+                auto *access = static_cast<VariableAccessExpr *>(assign->left.get());
+                if (access->name == decl->name) {
+                    decl->Accept(this);
+                    llvm::outs() << "=";
+                    assign->right->Accept(this);
+                    llvm::outs() << ";\n";
+                    ++i;
+                    continue;
+                }
+            }
+        }
+
         expr->Accept(this);
         llvm::outs() << ";\n";
     }
@@ -51,7 +74,7 @@ llvm::Value* PrintVisitor::VisitorAssignExpr(AssignExpr *assignExpr) {
     } else {
         assignExpr->left->Accept(this);
     }
-    llvm::outs() << " = ";
+    llvm::outs() << "=";
     assignExpr->right->Accept(this);
     return nullptr;
 }

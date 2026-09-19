@@ -1,6 +1,8 @@
 #include "codegen.h"
 #include "llvm/IR/Verifier.h"
 #include "llvm/IR/Value.h"
+#include "llvm/IR/Type.h"
+#include "llvm/IR/irBuilder.h"
 using namespace llvm;
 llvm::Value *CodeGen::VisitorBinaryExpr(BinaryExpr *binaryExpr)
 {
@@ -34,15 +36,22 @@ llvm::Value *CodeGen::VisitorNumberExpr(NumberExpr *numberExpr)
     return IRbuilder.getInt32(numberExpr->number);
 }
 
-llvm::Value *VisitorVariableDecl(VariableDecl *variableDecl)
+llvm::Value *CodeGen::VisitorVariableDecl(VariableDecl *variableDecl)
+{
+    llvm::Type *varType = nullptr;
+    if (variableDecl->ty== CType::GetIntType())
+    {
+        varType = IRbuilder.getInt32Ty();
+    }
+    llvm::Value *value = IRbuilder.CreateAlloca(varType, nullptr, variableDecl->name);
+    varAddr.insert({variableDecl->name, value});
+    return value;
+}
+llvm::Value *CodeGen::VisitorAssignExpr(AssignExpr *assignExpr)
 {
     return nullptr;
 }
-llvm::Value *VisitorAssignExpr(AssignExpr *assignExpr)
-{
-    return nullptr;
-}
-llvm::Value *VisitorVariableAccessExpr(VariableAccessExpr *variableAccessExpr)
+llvm::Value *CodeGen::VisitorVariableAccessExpr(VariableAccessExpr *variableAccessExpr)
 {
     return nullptr;
 }

@@ -40,6 +40,7 @@ public:
         row = col = -1;
         tokenType = TokenType::unknown;
         value = -1;
+        type = nullptr;
     }
 
     void Dump()

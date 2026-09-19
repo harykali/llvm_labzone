@@ -13,4 +13,4 @@ class CType{
     public:
         CType(TypeKind kind, int size, int align): kind(kind), size(size), align(align){};
         static CType *GetIntType();
-};
+ };

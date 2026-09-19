@@ -17,6 +17,7 @@ class Symbol{
         llvm::StringRef name;
     public:
         Symbol(SymbolKind kind, CType *ty, llvm::StringRef name):kind(kind),ty(ty),name(name){};
+        CType *GetType() const { return ty; }
 };
 
 

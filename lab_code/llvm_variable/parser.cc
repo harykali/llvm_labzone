@@ -55,8 +55,6 @@ std::vector<std::shared_ptr<ASTNode>> Parser::ParseDecl()
     /// int a,b=3;
     /// a,b=3;
 
-    auto varibale_name = tok.content;
-
     int i = 0;
     while (tok.tokenType != TokenType::semi)
     {
@@ -65,15 +63,19 @@ std::vector<std::shared_ptr<ASTNode>> Parser::ParseDecl()
         {
             assert(Consume(TokenType::comma));
         }
+
+        assert(Expect(TokenType::identifier));
+        auto variableName = tok.content;
+
         // int a=3; -> int a; a=3;
         // variable declaration
-        auto variableDecl = sema.SemaVariableDecl(varibale_name, baseTy);
+        auto variableDecl = sema.SemaVariableDecl(variableName, baseTy);
         astArr.push_back(variableDecl);
         Consume(TokenType::identifier);
 
         if (tok.tokenType == TokenType::equal)
         {   
-            auto left = sema.SemaVariableAccess(varibale_name, baseTy);
+            auto left = sema.SemaVariableAccess(variableName);
             Advance();
             auto right = ParseExpr();
 
@@ -155,10 +157,7 @@ std::shared_ptr<ASTNode> Parser::ParseFactor()
     }
     else if (tok.tokenType == TokenType::identifier)
     {
-        /// semc
-        auto expr = std::make_shared<VariableAccessExpr>();
-        expr->name = tok.content;
-        expr->ty = tok.type;
+        auto expr = sema.SemaVariableAccess(tok.content);
         Advance();
         return expr;
     }
@@ -167,6 +166,7 @@ std::shared_ptr<ASTNode> Parser::ParseFactor()
     {
         auto factor = std::make_shared<NumberExpr>();
         factor->number = tok.value;
+        factor->ty = tok.type;
         Advance();
         return factor;
     }
